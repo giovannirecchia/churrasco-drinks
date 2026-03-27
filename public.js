@@ -1,7 +1,8 @@
 const guests = window.CHURRASCO_GUESTS;
 const drinks = window.CHURRASCO_DRINKS;
-let state = window.loadAppState();
+let state = window.createDefaultState();
 let feedbackTimeout = null;
+let selectedGuest = null;
 
 const guestPickerSection = document.getElementById('guestPickerSection');
 const drinksSection = document.getElementById('drinksSection');
@@ -11,12 +12,6 @@ const activeGuestText = document.getElementById('activeGuestText');
 const feedbackMessage = document.getElementById('feedbackMessage');
 const drinkButtons = document.getElementById('drinkButtons');
 const doneBtn = document.getElementById('doneBtn');
-
-let selectedGuest = null;
-
-function save() {
-  window.saveAppState(state);
-}
 
 function showFeedback(message) {
   feedbackMessage.textContent = message;
@@ -35,14 +30,19 @@ function selectGuest(guest) {
   render();
 }
 
-function registerDrink(drink) {
+async function registerDrink(drink) {
   if (!selectedGuest) return;
-  state.counts[selectedGuest][drink] += 1;
-  save();
-  showFeedback(`${drink} registrada para ${selectedGuest}`);
-  setTimeout(() => {
-    goHome();
-  }, 500);
+  try {
+    await window.insertDrinkEvent({ person: selectedGuest, drink, delta: 1, source: 'public' });
+    await refreshState();
+    showFeedback(`${drink} registrada para ${selectedGuest}`);
+    setTimeout(() => {
+      goHome();
+    }, 500);
+  } catch (error) {
+    showFeedback(`Erro ao registrar`);
+    console.error(error);
+  }
 }
 
 function renderGuestButtons() {
@@ -66,16 +66,27 @@ function renderDrinkButtons() {
 }
 
 function render() {
-  state = window.loadAppState();
   guestPickerSection.classList.toggle('hidden', Boolean(selectedGuest));
   drinksSection.classList.toggle('hidden', !selectedGuest);
   renderGuestButtons();
   if (selectedGuest) renderDrinkButtons();
 }
 
-doneBtn.addEventListener('click', goHome);
-window.addEventListener('storage', () => {
-  state = window.loadAppState();
-});
+async function refreshState() {
+  const events = await window.fetchDrinkEvents();
+  state = window.computeStateFromEvents(events);
+}
 
-render();
+doneBtn.addEventListener('click', goHome);
+
+(async function init() {
+  await refreshState();
+  render();
+  window.supabaseClient
+    .channel('drink-events-public')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'drink_events' }, async () => {
+      await refreshState();
+      render();
+    })
+    .subscribe();
+})();

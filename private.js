@@ -1,6 +1,6 @@
 const guests = window.CHURRASCO_GUESTS;
 const drinks = window.CHURRASCO_DRINKS;
-let state = window.loadAppState();
+let state = window.createDefaultState();
 let feedbackTimeout = null;
 let selectedGuest = null;
 
@@ -15,10 +15,6 @@ const backBtn = document.getElementById('backBtn');
 const doneBtn = document.getElementById('doneBtn');
 const guestSummary = document.getElementById('guestSummary');
 
-function save() {
-  window.saveAppState(state);
-}
-
 function showFeedback(message) {
   feedbackMessage.textContent = message;
   feedbackMessage.classList.remove('hidden');
@@ -27,9 +23,7 @@ function showFeedback(message) {
 }
 
 function selectGuest(guest) {
-  state.selectedGuest = guest;
   selectedGuest = guest;
-  save();
   render();
 }
 
@@ -38,19 +32,23 @@ function goBackToSelection() {
   render();
 }
 
-function adjustCount(drink, delta) {
-  const guest = state.selectedGuest;
-  const next = Math.max(0, state.counts[guest][drink] + delta);
-  const previous = state.counts[guest][drink];
-  state.counts[guest][drink] = next;
-  save();
-  render();
-  if (delta > 0 && next > previous) showFeedback(`${drink} registrada para ${guest}`);
+async function adjustCount(drink, delta) {
+  const guest = selectedGuest;
+  if (!guest) return;
+  try {
+    await window.insertDrinkEvent({ person: guest, drink, delta, source: 'private' });
+    await refreshState();
+    render();
+    if (delta > 0) showFeedback(`${drink} registrada para ${guest}`);
+  } catch (error) {
+    showFeedback('Erro ao registrar');
+    console.error(error);
+  }
 }
 
 function renderGuestButtons() {
   guestButtons.innerHTML = guests.map((guest) => `
-    <button class="guest-btn ${state.selectedGuest === guest ? 'selected' : ''}" data-guest="${guest}">${guest}</button>
+    <button class="guest-btn ${selectedGuest === guest ? 'selected' : ''}" data-guest="${guest}">${guest}</button>
   `).join('');
   guestButtons.querySelectorAll('[data-guest]').forEach((btn) => {
     btn.addEventListener('click', () => selectGuest(btn.dataset.guest));
@@ -58,11 +56,11 @@ function renderGuestButtons() {
 }
 
 function renderDrinks() {
-  const guest = selectedGuest || state.selectedGuest;
+  const guest = selectedGuest;
   activeGuest.textContent = guest;
   activeGuestText.textContent = guest;
   drinksGrid.innerHTML = drinks.map((drink) => {
-    const count = state.counts[guest][drink];
+    const count = state.counts[guest]?.[drink] || 0;
     return `
       <div class="drink-card">
         <h3>${drink}</h3>
@@ -80,9 +78,9 @@ function renderDrinks() {
 }
 
 function renderSummary() {
-  const guest = state.selectedGuest;
+  const guest = selectedGuest;
   const rows = drinks
-    .filter((drink) => state.counts[guest][drink] > 0)
+    .filter((drink) => (state.counts[guest]?.[drink] || 0) > 0)
     .map((drink) => `<div class="summary-item"><span>${drink}</span><strong>${state.counts[guest][drink]}</strong></div>`);
   const total = window.totalForGuest(state, guest);
   guestSummary.innerHTML = rows.length
@@ -90,32 +88,32 @@ function renderSummary() {
     : '<div class="summary-item"><span class="sub">Ainda sem consumo registrado.</span><strong>0</strong></div>';
 }
 
-function ensureValidGuest() {
-  if (!guests.includes(state.selectedGuest)) {
-    state.selectedGuest = guests[0];
-    save();
-  }
-}
-
 function render() {
-  ensureValidGuest();
-  const activeSelection = selectedGuest || state.selectedGuest;
-  guestPickerSection.classList.toggle('hidden', Boolean(activeSelection && selectedGuest));
-  drinksSection.classList.toggle('hidden', !Boolean(activeSelection && selectedGuest));
+  guestPickerSection.classList.toggle('hidden', Boolean(selectedGuest));
+  drinksSection.classList.toggle('hidden', !selectedGuest);
   renderGuestButtons();
-  if (activeSelection && selectedGuest) {
+  if (selectedGuest) {
     renderDrinks();
     renderSummary();
   }
 }
 
-doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${state.selectedGuest}`));
+async function refreshState() {
+  const events = await window.fetchDrinkEvents();
+  state = window.computeStateFromEvents(events);
+}
+
+doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${selectedGuest}`));
 backBtn.addEventListener('click', goBackToSelection);
 
-window.addEventListener('storage', () => {
-  state = window.loadAppState();
-  ensureValidGuest();
+(async function init() {
+  await refreshState();
   render();
-});
-
-render();
+  window.supabaseClient
+    .channel('drink-events-private')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'drink_events' }, async () => {
+      await refreshState();
+      render();
+    })
+    .subscribe();
+})();
