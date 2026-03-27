@@ -2,109 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0; url=public.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Churrasco Drinks Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Churrasco Drinks</title>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div>
-        <h1>🍻 Drinks do Churrasco</h1>
-        <p>Selecione seu nome e registre cada bebida por clique.</p>
-      </div>
-      <button id="adminToggle" class="secondary">Admin</button>
-    </header>
-
-    <main>
-      <section class="card">
-        <div class="section-title-row">
-          <div>
-            <label for="modeSelect">Modo</label>
-            <select id="modeSelect">
-              <option value="private">Privado (celular)</option>
-              <option value="public">Público (tablet)</option>
-            </select>
-          </div>
-          <button id="backToNamesBtn" class="secondary hidden small">Trocar nome</button>
-        </div>
-      </section>
-
-      <section id="guestPickerSection" class="card">
-        <label for="guestSelect">Nome / casal</label>
-        <select id="guestSelect"></select>
-        <div id="guestButtons" class="guest-buttons"></div>
-      </section>
-
-      <section id="drinksSection" class="card">
-        <div class="section-title-row">
-          <h2>Registrar consumo</h2>
-          <div id="activeGuest" class="badge active-guest-badge"></div>
-        </div>
-        <p class="active-guest-note">Lançando bebidas para: <strong id="activeGuestText"></strong></p>
-        <p id="feedbackMessage" class="feedback-message hidden"></p>
-        <div id="drinksGrid" class="drinks-grid"></div>
-        <div class="actions-row">
-          <button id="switchGuestBtn" class="secondary">Voltar para lista de nomes</button>
-          <button id="doneBtn" class="secondary">Done</button>
-        </div>
-      </section>
-
-      <section class="card compact">
-        <div class="section-title-row">
-          <h2>Resumo da pessoa selecionada</h2>
-          <button id="resetGuestBtn" class="danger small">Zerar pessoa</button>
-        </div>
-        <div id="guestSummary" class="summary-list"></div>
-      </section>
-
-      <section id="adminPanel" class="card hidden">
-        <div class="section-title-row">
-          <h2>Resumo geral / rateio</h2>
-          <button id="exportBtn" class="secondary small">Copiar resumo</button>
-        </div>
-
-        <div class="admin-grid">
-          <div>
-            <label for="unitCost">Custo por unidade (£)</label>
-            <input id="unitCost" type="number" step="0.01" min="0" placeholder="Ex: 1.05" />
-            <p class="hint">O sistema arredonda para cima no próximo quarter. Ex: 1.05 → 1.25</p>
-          </div>
-          <div>
-            <label for="roundStep">Quarter de arredondamento (£)</label>
-            <select id="roundStep">
-              <option value="0.25" selected>0.25</option>
-              <option value="0.5">0.50</option>
-              <option value="1">1.00</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="totals-row">
-          <div class="stat">
-            <span>Total de unidades</span>
-            <strong id="totalUnits">0</strong>
-          </div>
-          <div class="stat">
-            <span>Valor arredondado por unidade</span>
-            <strong id="roundedUnitCost">£0.00</strong>
-          </div>
-        </div>
-
-        <div class="tables">
-          <div>
-            <h3>Totais por bebida</h3>
-            <div id="drinkTotals" class="summary-list"></div>
-          </div>
-          <div>
-            <h3>Totais por pessoa</h3>
-            <div id="personTotals" class="summary-list"></div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script src="app.js"></script>
+  <p>Redirecionando para <a href="public.html">public.html</a>...</p>
 </body>
 </html>

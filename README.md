@@ -1,54 +1,35 @@
 # Churrasco Drinks Tracker
 
-Mini web app mobile-first para registrar consumo de bebidas por clique.
+Versão com 3 páginas separadas:
 
-## Como usar
+- `public.html` → quiosque/tablet compartilhado
+- `private.html` → uso individual no celular
+- `admin.html` → totais, rateio e resumo final
 
-1. Abra `index.html` no navegador.
-2. Escolha o modo:
-   - `Privado (celular)` para uso individual
-   - `Público (tablet)` para uso compartilhado perto das bebidas
-3. No modo privado, selecione o nome/casal no seletor.
-4. No modo público, toque no nome em botão grande.
-5. Clique em `+1` na bebida correspondente.
-6. Use `-1` para corrigir.
-7. No modo público, toque em `Done` quando terminar para voltar à lista de nomes.
-8. Abra `Admin` para ver totais e calcular o repasse.
-9. Informe o custo por unidade em libras.
-10. O sistema arredonda para cima no quarter escolhido.
-11. Clique em `Copiar resumo` para gerar o texto final.
+## Fluxo
 
-## Regras implementadas
+### Público
+- nomes em botões
+- bebidas em botões grandes
+- feedback ao registrar
+- volta automática para a tela inicial
+- botão `Done` para voltar rápido
 
-- Casais contam juntos.
-- Contagem por unidade.
-- Rateio simples por unidade.
-- Arredondamento para cima em quarters (padrão: £0.25).
-- Dados salvos no `localStorage` do navegador.
+### Privado
+- nomes em botões
+- registro com contador por bebida (`+1` / `-1`)
+- `Done` mantém a pessoa no fluxo atual
+- resumo por pessoa selecionada
 
-## Lista atual
+### Admin
+- custo por unidade
+- arredondamento em quarters
+- totais por bebida
+- totais por pessoa
+- copiar resumo final
 
-Participantes:
-- Eu
-- Fe e Umit
-- Filipi e Isa
-- Thi e Ju
-- Gustavo
-- Shura
-- Cici
-- Riley
-- Aycan
-- Enis
-- Dove
-- Amgad
-- Larissa
-- Ana
+## Observação técnica
 
-Bebidas:
-- Beer
-- Caipirinha
-- Batida de morango
-- Jagermeister
-- Tequila Rose
-- Aperol Spritz
-- Breezer Watermelon
+Os dados são compartilhados via `localStorage` do navegador.
+Isso funciona bem quando o mesmo navegador/dispositivo usa as páginas.
+Se no futuro você quiser sincronizar múltiplos celulares diferentes em tempo real, aí vale plugar um backend leve (ex: Supabase/Firebase).

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drinks Público</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>🍺 Drinks Público</h1>
+        <p>Toque no nome, toque na bebida.</p>
+      </div>
+      <a class="nav-link" href="admin.html">Admin</a>
+    </header>
+
+    <main>
+      <section id="guestPickerSection" class="card">
+        <h2>Escolha o nome</h2>
+        <div id="guestButtons" class="guest-buttons"></div>
+      </section>
+
+      <section id="drinksSection" class="card hidden">
+        <div class="section-title-row">
+          <h2>Escolha a bebida</h2>
+          <div id="activeGuest" class="badge active-guest-badge"></div>
+        </div>
+        <p class="active-guest-note">Registrando para: <strong id="activeGuestText"></strong></p>
+        <p id="feedbackMessage" class="feedback-message hidden"></p>
+        <div id="drinkButtons" class="drink-button-grid"></div>
+        <div class="actions-row">
+          <button id="doneBtn" class="secondary">Done</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="public.js"></script>
+</body>
+</html>

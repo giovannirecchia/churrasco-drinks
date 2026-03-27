@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drinks Privado</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div>
+        <h1>🍻 Drinks Privado</h1>
+        <p>Escolha o nome e registre as bebidas.</p>
+      </div>
+      <a class="nav-link" href="admin.html">Admin</a>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Quem está lançando?</h2>
+        <div id="guestButtons" class="guest-buttons"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-title-row">
+          <h2>Registrar consumo</h2>
+          <div id="activeGuest" class="badge active-guest-badge"></div>
+        </div>
+        <p class="active-guest-note">Lançando bebidas para: <strong id="activeGuestText"></strong></p>
+        <p id="feedbackMessage" class="feedback-message hidden"></p>
+        <div id="drinksGrid" class="drinks-grid"></div>
+        <div class="actions-row">
+          <button id="doneBtn" class="secondary">Done</button>
+        </div>
+      </section>
+
+      <section class="card compact">
+        <div class="section-title-row">
+          <h2>Resumo da pessoa selecionada</h2>
+          <button id="resetGuestBtn" class="danger small">Zerar pessoa</button>
+        </div>
+        <div id="guestSummary" class="summary-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="private.js"></script>
+</body>
+</html>
