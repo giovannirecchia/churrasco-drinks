@@ -141,6 +141,17 @@ button.small { padding: 10px 12px; font-size: 0.92rem; }
   color: #fde68a;
 }
 
+.selected-guest-bar {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  background: rgba(245, 158, 11, 0.14);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fde68a;
+  text-align: left;
+}
+
 .drink-button-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

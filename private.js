@@ -2,8 +2,11 @@ const guests = window.CHURRASCO_GUESTS;
 const drinks = window.CHURRASCO_DRINKS;
 let state = window.loadAppState();
 let feedbackTimeout = null;
+let guestListExpanded = true;
 
 const guestButtons = document.getElementById('guestButtons');
+const guestToggleBtn = document.getElementById('guestToggleBtn');
+const selectedGuestBar = document.getElementById('selectedGuestBar');
 const activeGuest = document.getElementById('activeGuest');
 const activeGuestText = document.getElementById('activeGuestText');
 const feedbackMessage = document.getElementById('feedbackMessage');
@@ -24,7 +27,13 @@ function showFeedback(message) {
 
 function selectGuest(guest) {
   state.selectedGuest = guest;
+  guestListExpanded = false;
   save();
+  render();
+}
+
+function toggleGuestList() {
+  guestListExpanded = !guestListExpanded;
   render();
 }
 
@@ -39,6 +48,11 @@ function adjustCount(drink, delta) {
 }
 
 function renderGuestButtons() {
+  selectedGuestBar.textContent = `Pessoa selecionada: ${state.selectedGuest}`;
+  selectedGuestBar.classList.toggle('hidden', guestListExpanded);
+  guestButtons.classList.toggle('hidden', !guestListExpanded);
+  guestToggleBtn.textContent = guestListExpanded ? 'Recolher' : 'Trocar';
+
   guestButtons.innerHTML = guests.map((guest) => `
     <button class="guest-btn ${state.selectedGuest === guest ? 'selected' : ''}" data-guest="${guest}">${guest}</button>
   `).join('');
@@ -88,6 +102,8 @@ function render() {
 }
 
 doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${state.selectedGuest}`));
+guestToggleBtn.addEventListener('click', toggleGuestList);
+selectedGuestBar.addEventListener('click', toggleGuestList);
 
 window.addEventListener('storage', () => {
   state = window.loadAppState();
