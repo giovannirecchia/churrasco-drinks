@@ -1,5 +1,5 @@
 window.CHURRASCO_GUESTS = [
-  'Eu',
+  'Giovanni',
   'Fe e Umit',
   'Filipi e Isa',
   'Thi e Ju',
@@ -12,7 +12,8 @@ window.CHURRASCO_GUESTS = [
   'Dove',
   'Amgad',
   'Larissa',
-  'Ana'
+  'Ana',
+  'Naessa'
 ];
 
 window.CHURRASCO_DRINKS = [
