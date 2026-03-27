@@ -10,7 +10,6 @@ const feedbackMessage = document.getElementById('feedbackMessage');
 const drinksGrid = document.getElementById('drinksGrid');
 const doneBtn = document.getElementById('doneBtn');
 const guestSummary = document.getElementById('guestSummary');
-const resetGuestBtn = document.getElementById('resetGuestBtn');
 
 function save() {
   window.saveAppState(state);
@@ -37,14 +36,6 @@ function adjustCount(drink, delta) {
   save();
   render();
   if (delta > 0 && next > previous) showFeedback(`${drink} registrada para ${guest}`);
-}
-
-function resetGuest() {
-  const guest = state.selectedGuest;
-  if (!confirm(`Zerar todas as bebidas de ${guest}?`)) return;
-  for (const drink of drinks) state.counts[guest][drink] = 0;
-  save();
-  render();
 }
 
 function renderGuestButtons() {
@@ -97,7 +88,6 @@ function render() {
 }
 
 doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${state.selectedGuest}`));
-resetGuestBtn.addEventListener('click', resetGuest);
 
 window.addEventListener('storage', () => {
   state = window.loadAppState();
