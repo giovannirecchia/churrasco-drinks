@@ -3,10 +3,6 @@ const drinks = window.CHURRASCO_DRINKS;
 let state = window.loadAppState();
 
 const exportBtn = document.getElementById('exportBtn');
-const unitCostInput = document.getElementById('unitCost');
-const roundStepSelect = document.getElementById('roundStep');
-const totalUnitsEl = document.getElementById('totalUnits');
-const roundedUnitCostEl = document.getElementById('roundedUnitCost');
 const drinkTotalsEl = document.getElementById('drinkTotals');
 const personTotalsEl = document.getElementById('personTotals');
 
@@ -19,9 +15,6 @@ function buildSummaryText() {
   const rounded = window.roundUpToStep(rawUnitCost, Number(state.roundStep || 0.25));
   const lines = [
     'Resumo final das bebidas',
-    '',
-    `Custo por unidade informado: ${window.currency(rawUnitCost)}`,
-    `Custo por unidade arredondado: ${window.currency(rounded)}`,
     '',
     'Consumo por pessoa:'
   ];
@@ -58,11 +51,6 @@ function render() {
   const rawUnitCost = Number(state.unitCost || 0);
   const rounded = window.roundUpToStep(rawUnitCost, Number(state.roundStep || 0.25));
 
-  unitCostInput.value = state.unitCost;
-  roundStepSelect.value = String(state.roundStep);
-  totalUnitsEl.textContent = String(window.totalUnits(state));
-  roundedUnitCostEl.textContent = window.currency(rounded);
-
   drinkTotalsEl.innerHTML = drinks
     .map((drink) => `<div class="summary-item"><span>${drink}</span><strong>${window.totalForDrink(state, drink)}</strong></div>`)
     .join('');
@@ -82,16 +70,6 @@ function render() {
 }
 
 exportBtn.addEventListener('click', copySummary);
-unitCostInput.addEventListener('input', (e) => {
-  state.unitCost = e.target.value;
-  save();
-  render();
-});
-roundStepSelect.addEventListener('change', (e) => {
-  state.roundStep = Number(e.target.value);
-  save();
-  render();
-});
 window.addEventListener('storage', render);
 
 render();
