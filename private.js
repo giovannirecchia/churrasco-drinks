@@ -32,6 +32,11 @@ function selectGuest(guest) {
   render();
 }
 
+function expandGuestList() {
+  guestListExpanded = true;
+  render();
+}
+
 function toggleGuestList() {
   guestListExpanded = !guestListExpanded;
   render();
@@ -50,7 +55,7 @@ function adjustCount(drink, delta) {
 function renderGuestButtons() {
   selectedGuestBar.textContent = `Pessoa selecionada: ${state.selectedGuest}`;
   guestButtons.classList.toggle('hidden', !guestListExpanded);
-  guestToggleBtn.textContent = guestListExpanded ? 'Recolher' : 'Trocar';
+  guestToggleBtn.textContent = guestListExpanded ? 'Fechar' : 'Trocar';
 
   guestButtons.innerHTML = guests.map((guest) => `
     <button class="guest-btn ${state.selectedGuest === guest ? 'selected' : ''}" data-guest="${guest}">${guest}</button>
@@ -109,7 +114,7 @@ function render() {
 
 doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${state.selectedGuest}`));
 guestToggleBtn.addEventListener('click', toggleGuestList);
-selectedGuestBar.addEventListener('click', toggleGuestList);
+selectedGuestBar.addEventListener('click', expandGuestList);
 
 window.addEventListener('storage', () => {
   state = window.loadAppState();
