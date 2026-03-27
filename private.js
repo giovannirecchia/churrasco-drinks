@@ -49,7 +49,6 @@ function adjustCount(drink, delta) {
 
 function renderGuestButtons() {
   selectedGuestBar.textContent = `Pessoa selecionada: ${state.selectedGuest}`;
-  selectedGuestBar.classList.toggle('hidden', guestListExpanded);
   guestButtons.classList.toggle('hidden', !guestListExpanded);
   guestToggleBtn.textContent = guestListExpanded ? 'Recolher' : 'Trocar';
 
@@ -94,8 +93,15 @@ function renderSummary() {
     : '<div class="summary-item"><span class="sub">Ainda sem consumo registrado.</span><strong>0</strong></div>';
 }
 
+function ensureValidGuest() {
+  if (!guests.includes(state.selectedGuest)) {
+    state.selectedGuest = guests[0];
+    save();
+  }
+}
+
 function render() {
-  state = window.loadAppState();
+  ensureValidGuest();
   renderGuestButtons();
   renderDrinks();
   renderSummary();
@@ -107,6 +113,7 @@ selectedGuestBar.addEventListener('click', toggleGuestList);
 
 window.addEventListener('storage', () => {
   state = window.loadAppState();
+  ensureValidGuest();
   render();
 });
 
