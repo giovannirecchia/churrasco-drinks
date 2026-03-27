@@ -2,15 +2,16 @@ const guests = window.CHURRASCO_GUESTS;
 const drinks = window.CHURRASCO_DRINKS;
 let state = window.loadAppState();
 let feedbackTimeout = null;
-let guestListExpanded = true;
+let selectedGuest = null;
 
+const guestPickerSection = document.getElementById('guestPickerSection');
+const drinksSection = document.getElementById('drinksSection');
 const guestButtons = document.getElementById('guestButtons');
-const guestToggleBtn = document.getElementById('guestToggleBtn');
-const selectedGuestBar = document.getElementById('selectedGuestBar');
 const activeGuest = document.getElementById('activeGuest');
 const activeGuestText = document.getElementById('activeGuestText');
 const feedbackMessage = document.getElementById('feedbackMessage');
 const drinksGrid = document.getElementById('drinksGrid');
+const backBtn = document.getElementById('backBtn');
 const doneBtn = document.getElementById('doneBtn');
 const guestSummary = document.getElementById('guestSummary');
 
@@ -27,18 +28,13 @@ function showFeedback(message) {
 
 function selectGuest(guest) {
   state.selectedGuest = guest;
-  guestListExpanded = false;
+  selectedGuest = guest;
   save();
   render();
 }
 
-function expandGuestList() {
-  guestListExpanded = true;
-  render();
-}
-
-function toggleGuestList() {
-  guestListExpanded = !guestListExpanded;
+function goBackToSelection() {
+  selectedGuest = null;
   render();
 }
 
@@ -53,10 +49,6 @@ function adjustCount(drink, delta) {
 }
 
 function renderGuestButtons() {
-  selectedGuestBar.textContent = `Pessoa selecionada: ${state.selectedGuest}`;
-  guestButtons.classList.toggle('hidden', !guestListExpanded);
-  guestToggleBtn.textContent = guestListExpanded ? 'Fechar' : 'Trocar';
-
   guestButtons.innerHTML = guests.map((guest) => `
     <button class="guest-btn ${state.selectedGuest === guest ? 'selected' : ''}" data-guest="${guest}">${guest}</button>
   `).join('');
@@ -66,7 +58,7 @@ function renderGuestButtons() {
 }
 
 function renderDrinks() {
-  const guest = state.selectedGuest;
+  const guest = selectedGuest || state.selectedGuest;
   activeGuest.textContent = guest;
   activeGuestText.textContent = guest;
   drinksGrid.innerHTML = drinks.map((drink) => {
@@ -107,14 +99,18 @@ function ensureValidGuest() {
 
 function render() {
   ensureValidGuest();
+  const activeSelection = selectedGuest || state.selectedGuest;
+  guestPickerSection.classList.toggle('hidden', Boolean(activeSelection && selectedGuest));
+  drinksSection.classList.toggle('hidden', !Boolean(activeSelection && selectedGuest));
   renderGuestButtons();
-  renderDrinks();
-  renderSummary();
+  if (activeSelection && selectedGuest) {
+    renderDrinks();
+    renderSummary();
+  }
 }
 
 doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${state.selectedGuest}`));
-guestToggleBtn.addEventListener('click', toggleGuestList);
-selectedGuestBar.addEventListener('click', expandGuestList);
+backBtn.addEventListener('click', goBackToSelection);
 
 window.addEventListener('storage', () => {
   state = window.loadAppState();
