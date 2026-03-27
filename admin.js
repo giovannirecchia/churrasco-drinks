@@ -3,6 +3,7 @@ const drinks = window.CHURRASCO_DRINKS;
 let state = window.createDefaultState();
 let events = [];
 
+const refreshBtn = document.getElementById('refreshBtn');
 const exportBtn = document.getElementById('exportBtn');
 const drinkTotalsEl = document.getElementById('drinkTotals');
 const personTotalsEl = document.getElementById('personTotals');
@@ -66,6 +67,10 @@ async function refreshState() {
   state = window.computeStateFromEvents(events);
 }
 
+refreshBtn.addEventListener('click', async () => {
+  await refreshState();
+  render();
+});
 exportBtn.addEventListener('click', copySummary);
 
 (async function init() {

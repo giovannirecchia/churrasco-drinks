@@ -12,6 +12,7 @@ const activeGuestText = document.getElementById('activeGuestText');
 const feedbackMessage = document.getElementById('feedbackMessage');
 const drinksGrid = document.getElementById('drinksGrid');
 const backBtn = document.getElementById('backBtn');
+const refreshBtn = document.getElementById('refreshBtn');
 const doneBtn = document.getElementById('doneBtn');
 const guestSummary = document.getElementById('guestSummary');
 
@@ -105,6 +106,11 @@ async function refreshState() {
 
 doneBtn.addEventListener('click', () => showFeedback(`Pronto — você continua lançando para ${selectedGuest}`));
 backBtn.addEventListener('click', goBackToSelection);
+refreshBtn.addEventListener('click', async () => {
+  await refreshState();
+  render();
+  showFeedback('Dados atualizados');
+});
 
 (async function init() {
   await refreshState();
