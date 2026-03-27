@@ -24,13 +24,15 @@
       <section id="drinksSection" class="card hidden">
         <div class="section-title-row">
           <h2>Registrar consumo</h2>
-          <div id="activeGuest" class="badge active-guest-badge"></div>
+          <div class="inline-actions">
+            <div id="activeGuest" class="badge active-guest-badge"></div>
+            <button id="backBtn" class="secondary small">Voltar</button>
+          </div>
         </div>
         <p class="active-guest-note">Lançando bebidas para: <strong id="activeGuestText"></strong></p>
         <p id="feedbackMessage" class="feedback-message hidden"></p>
         <div id="drinksGrid" class="drinks-grid"></div>
         <div class="actions-row">
-          <button id="backBtn" class="secondary">Voltar para seleção</button>
           <button id="doneBtn" class="secondary">Done</button>
         </div>
       </section>
