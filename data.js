@@ -23,7 +23,8 @@ window.CHURRASCO_DRINKS = [
   'Jagermeister',
   'Tequila Rose',
   'Aperol Spritz',
-  'Breezer Watermelon'
+  'Breezer Watermelon',
+  'Vodka + Red Bull'
 ];
 
 window.STORAGE_KEY = 'churrasco-drinks-v2';
